@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import CreateIcon from '@material-ui/icons/Create';
 import ImageIcon from '@material-ui/icons/Image';
 import SubscriptionsIcon from '@material-ui/icons/Subscriptions';
@@ -8,8 +8,10 @@ import CalendarViewDayIcon from '@material-ui/icons/CalendarViewDay';
 import InputOption from './InputOption';
 
 import './Feed.styles.css';
+import Post from './Post';
 
 const Feed = (props) => {
+  const [posts, setPosts] = useState([]);
   return (
     <div className="feed">
       <div className="feed__inputContainer">
@@ -31,6 +33,14 @@ const Feed = (props) => {
           />
         </div>
       </div>
+      {posts.map((post) => (
+        <Post
+          title={posts.title}
+          description={post.description}
+          message={post.message}
+          photoUrl={post.photoUrl}
+        />
+      ))}
     </div>
   );
 };
