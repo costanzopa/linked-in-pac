@@ -1,20 +1,97 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { auth } from '../../firebase/firebase.utils';
+import { userLogin } from '../../redux/user/user.actions';
 
 import './Login.styles.css';
 const Login = (props) => {
+  const [email, setEmail] = useState('');
+  const [name, setName] = useState('');
+  const [password, setPassword] = useState('');
+  const [profilePic, setProfilePic] = useState('');
+  const dispatch = useDispatch();
+
+  const login = (e) => {
+    e.preventDefault();
+    auth
+      .signInWithEmailAndPassword(email, password)
+      .then((userAuth) => {
+        dispatch(
+          userLogin({
+            email: userAuth.user.email,
+            uid: userAuth.user.uid,
+            displayName: userAuth.user.displayName,
+            photoURL: userAuth.user.photoURL,
+          })
+        );
+      })
+      .catch((error) => alert(error));
+  };
+
+  const register = (e) => {
+    if (!name) {
+      return alert('Please Enter a full Name');
+    }
+    auth
+      .createUserWithEmailAndPassword(email, password)
+      .then((userAuth) => {
+        userAuth.user
+          .updateProfile({
+            displayName: name,
+            photoURL: profilePic,
+          })
+          .then(() => {
+            dispatch(
+              userLogin({
+                email: userAuth.user.email,
+                uid: userAuth.user.uid,
+                displayName: name,
+                photoURL: profilePic,
+              })
+            );
+          });
+      })
+      .catch((error) => alert(error));
+  };
+
   return (
     <div className="login">
       <img src="LinkedIn-Logo.svg" alt="" />
-      <form action="">
-        <input type="text" placeholder="Full name (require if registering)" />
-        <input type="text" placeholder="Profile pic URL (optional)" />
-        <input type="email" placeholder="Emails" />
-        <input type="password" placeholder="Password" />
-        <button type="submit">Sign In</button>
+      <form>
+        <input
+          type="text"
+          placeholder="Full name (require if registering)"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
+        <input
+          type="text"
+          placeholder="Profile pic URL (optional)"
+          value={profilePic}
+          onChange={(e) => setProfilePic(e.target.value)}
+        />
+        <input
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <button type="submit" onClick={login}>
+          Sign In
+        </button>
       </form>
       <p>
         Not a member?
-        <span className="login__register">Register Now</span>
+        <span className="login__register" onClick={register}>
+          {' '}
+          Register Now
+        </span>
       </p>
     </div>
   );
