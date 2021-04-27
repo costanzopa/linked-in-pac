@@ -46,7 +46,7 @@ const Feed = (props) => {
       <div className="feed__inputContainer">
         <div className="feed__input">
           <CreateIcon />
-          <form action={submitPost}>
+          <form onSubmit={submitPost}>
             <input
               value={input}
               onChange={(e) => setInput(e.target.value)}
