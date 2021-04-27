@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import CreateIcon from '@material-ui/icons/Create';
 import ImageIcon from '@material-ui/icons/Image';
 import SubscriptionsIcon from '@material-ui/icons/Subscriptions';
 import EventNoteIcon from '@material-ui/icons/EventNote';
 import CalendarViewDayIcon from '@material-ui/icons/CalendarViewDay';
+
+import { selectCurrentUser } from '../../redux/user/user.selector';
 
 import InputOption from './InputOption';
 
@@ -14,6 +17,8 @@ import { firestore, firebase } from '../../firebase/firebase.utils';
 const Feed = (props) => {
   const [posts, setPosts] = useState([]);
   const [input, setInput] = useState('');
+
+  const user = useSelector(selectCurrentUser);
 
   useEffect(() => {
     firestore
@@ -32,10 +37,10 @@ const Feed = (props) => {
   const submitPost = (e) => {
     e.preventDefault();
     firestore.collection('posts').add({
-      name: 'Pablo Costanzo',
-      description: 'This is a Test',
+      name: user.displayName,
+      description: user.email,
       message: input,
-      photoUrl: '',
+      photoUrl: user.photoURL || '',
       timestamp: firebase.firestore.FieldValue.serverTimestamp(),
     });
     setInput('');
