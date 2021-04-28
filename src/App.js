@@ -4,6 +4,7 @@ import Header from './components/Header';
 import Sidebar from './components/Sidebar';
 import Feed from './components/Feed';
 import Login from './components/Login';
+import Widgets from './components/Widgets';
 import { selectCurrentUser } from './redux/user/user.selector';
 import { userLogin, userLogout } from './redux/user/user.actions';
 import { auth } from './firebase/firebase.utils';
@@ -38,7 +39,7 @@ function App() {
         <div className="app__body">
           <Sidebar />
           <Feed />
-          {/* Widgets */}
+          <Widgets />
         </div>
       )}
     </div>
